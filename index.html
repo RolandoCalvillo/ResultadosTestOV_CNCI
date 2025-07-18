@@ -1,320 +1,351 @@
-import React, { useState, useEffect } from 'react';
-
-// Main App component
-const App = () => {
-  const [activeTab, setActiveTab] = useState('vocational'); // State to manage active tab
-  const [searchTermVocational, setSearchTermVocational] = useState(''); // Search term for vocational interests
-  const [searchTermMultiple, setSearchTermMultiple] = useState(''); // Search term for multiple intelligences
-
-  // Data for vocational interests
-  const vocationalInterests = {
-    'C - Administrativas y Contables': {
-      emoji: '📊',
-      habilidades: [
-        'Organizativo', 'Supervisión', 'Orden', 'Análisis y síntesis', 'Colaboración',
-        'Cálculo', 'Liderazgo', 'Participación Activa'
-      ],
-      carreras: [
-        'Administración de empresas', 'Administración de instituciones de servicio',
-        'Administración de mercados', 'Economía y finanzas internacionales',
-        'Administración de negocios', 'Contabilidad'
-      ]
-    },
-    'H - Humanísticas y Sociales': {
-      emoji: '📚',
-      habilidades: [
-        'Precisión Verbal', 'Organización', 'Relación de Hechos', 'Lingüística',
-        'Orden', 'Justicia', 'Analítico'
-      ],
-      carreras: [
-        'Sociología', 'Psicología', 'Antropología', 'Trabajo Social',
-        'Comunicación Social', 'Periodismo', 'Filosofía', 'Ciencias políticas',
-        'Derecho', 'Ciencias forenses'
-      ]
-    },
-    'A - Artísticas': {
-      emoji: '🎨',
-      habilidades: [
-        'Estético', 'Armónico', 'Manual', 'Visual', 'Auditivo',
-        'Observación y Análisis', 'Senso- Perceptivo'
-      ],
-      carreras: [
-        'Música', 'Artes plásticas', 'Teatro', 'Dibujo'
-      ]
-    },
-    'S - Medicina y Cs. de la Salud': {
-      emoji: '⚕️',
-      habilidades: [
-        'Asistir', 'Investigativo', 'Precisión', 'Senso-Perceptivo',
-        'Analítico', 'Ayudar', 'Curar', 'Rehabilitar'
-      ],
-      carreras: [
-        'Medicina', 'Bacteriología', 'Enfermería', 'Odontología', 'Optometría',
-        'Fisioterapia', 'Fonoaudiología', 'Nutrición', 'Terapia ocupacional',
-        'Terapia respiratoria'
-      ]
-    },
-    'I - Ingeniería y Computación': {
-      emoji: '💻',
-      habilidades: [
-        'Cálculo', 'Científico', 'Manual', 'Exacto', 'Planificar',
-        'Organizar', 'Controlar'
-      ],
-      carreras: [
-        'INGENIERIAS: Financiera', 'Industrial', 'Informática', 'Eléctrica',
-        'Ingeniería de Mercados', 'Química', 'Mecánica', 'Alimentos', 'Civil',
-        'Ambiental', 'Agrícola', 'Materiales', 'Telecomunicaciones', 'Arquitectura',
-        'Diseño gráfico', 'Geología',
-        'TECNOLOGIAS: Técnicos en mecánica', 'Técnicos en contabilidad',
-        'Técnicos en periodismo', 'Técnicos en Recursos Humanos',
-        'Técnico Profesional en Realización y Producción en T.V',
-        'Tecnólogo en Sistemas', 'Tecnólogo en Gestión Financiera',
-        'Tecnólogo en Salud Ocupacional'
-      ]
-    },
-    'D - Defensa y Seguridad': {
-      emoji: '🛡️',
-      habilidades: [
-        'Justicia', 'Equidad', 'Colaboración', 'Espíritu de Equipo',
-        'Liderazgo', 'Coordinación', 'Destreza Física'
-      ],
-      carreras: [
-        'Carrera militar y de policía', 'Oficiales y suboficiales del ejército',
-        'La armada', 'Fuerza aérea', 'Oficiales y suboficiales de la policía nacional'
-      ]
-    },
-    'E - Ciencias Exactas y Agrarias': {
-      emoji: '🔬',
-      habilidades: [
-        'Clasificar', 'Numérico', 'Análisis y Síntesis', 'Organización',
-        'Orden', 'Investigación', 'Precisión', 'Exacto'
-      ],
-      carreras: [
-        'Biología', 'Zoología', 'Zootecnia', 'Agronomía', 'Veterinaria'
-      ]
-    }
-  };
-
-  // Data for multiple intelligences
-  const multipleIntelligences = {
-    'Inteligencia Verbal': {
-      emoji: '🗣️',
-      habilidades: [
-        'Comprensión del orden y significado de las palabras',
-        'Habilidad en la escritura y la lectura',
-        'Habla y escucha eficaz'
-      ],
-      carreras: [
-        'Periodismo', 'Publicidad', 'Relaciones Públicas', 'Humanidades', 'Ciencia Política'
-      ]
-    },
-    'Inteligencia Lógico-matemática': {
-      emoji: '🧠',
-      habilidades: [
-        'Identificación de modelos y patrones.',
-        'Capacidad para calcular, formular y verificar hipótesis.',
-        'Habilidad para uso del método científico y razonamientos inductivo y deductivo.'
-      ],
-      carreras: [
-        'Informática', 'Carreras de Ciencias exactas', 'Ingeniería', 'Filosofía'
-      ]
-    },
-    'Inteligencia Visual-espacial': {
-      emoji: '👁️',
-      habilidades: [
-        'Presentación de ideas visuales', 'Creación de imágenes mentales',
-        'Percepción de detalles visuales', 'Habilidad para dibujar y confeccionar bocetos'
-      ],
-      carreras: [
-        'Artes plásticas', 'Diseño', 'Fotografía', 'Arquitectura', 'Publicidad'
-      ]
-    },
-    'Inteligencia Kinestésica-corporal': {
-      emoji: '🤸',
-      habilidades: [
-        'Capacidad para actividades de fuerza, rapidez y flexibilidad.',
-        'Buena coordinación óculo-manual', 'Habilidad de equilibrio',
-        'Destreza del cuerpo para expresión corporal o realizar reparaciones'
-      ],
-      carreras: [
-        'Fisioterapia', 'Deportes', 'Danza'
-      ]
-    },
-    'Inteligencia Musical-rítmica': {
-      emoji: '🎶',
-      habilidades: [
-        'Capacidad para cantar, tocar instrumentos y escuchar',
-        'Habilidad para creación y análisis musical'
-      ],
-      carreras: [
-        'Ingeniería de sonido', 'Producción Audiovisual', 'Música', 'Cinematografía', 'Danza'
-      ]
-    },
-    'Inteligencia Intrapersonal': {
-      emoji: '🧘',
-      habilidades: [
-        'Autodisciplina y control personal', 'Destreza para el planteamiento de metas',
-        'Capacidad para evaluar habilidades y desventajas personales',
-        'Habilidad para la introspección y meditación'
-      ],
-      carreras: [
-        'Psicología', 'Pedagogía', 'Trabajo Social'
-      ]
-    },
-    'Inteligencia Interpersonal': {
-      emoji: '🤝',
-      habilidades: [
-        'Empatía y comunicación', 'Habilidad para trabajar con la gente',
-        'Destreza en reconocer sentimientos y personalidades',
-        'Capacidad para ayudar a las personas con sus problemas'
-      ],
-      carreras: [
-        'Ciencias de la comunicación', 'Recursos Humanos', 'Marketing',
-        'Sociología', 'Antropología', 'Derecho', 'Medicina'
-      ]
-    }
-  };
-
-  // Component for rendering a tab with search and expandable items
-  const TabContent = ({ data, searchTerm, setSearchTerm, title }) => {
-    const [openItems, setOpenItems] = useState({}); // State to manage open/closed items
-
-    // Filter items based on search term
-    const filteredData = Object.keys(data).filter(key =>
-      key.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-
-    // Toggle item visibility
-    const toggleItem = (item) => {
-      setOpenItems(prev => ({ ...prev, [item]: !prev[item] }));
-    };
-
-    return (
-      <div className="p-6 bg-white rounded-lg shadow-lg">
-        {/* Search bar */}
-        <div className="mb-6">
-          <input
-            type="text"
-            placeholder={`Buscar ${title.toLowerCase()}...`}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800 placeholder-gray-400"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
-        {/* List of items */}
-        <div className="space-y-4">
-          {filteredData.length > 0 ? (
-            filteredData.map(item => (
-              <div key={item} className="border border-gray-200 rounded-lg overflow-hidden">
-                {/* Item header (button) */}
-                <button
-                  className="w-full flex justify-between items-center p-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold text-lg rounded-t-lg shadow-md hover:from-blue-600 hover:to-purple-700 transition-all duration-300 ease-in-out"
-                  onClick={() => toggleItem(item)}
-                >
-                  <span className="flex items-center">
-                    <span className="mr-2 text-2xl">{data[item].emoji}</span>
-                    {item}
-                  </span>
-                  <svg
-                    className={`w-6 h-6 transform transition-transform duration-300 ${openItems[item] ? 'rotate-180' : ''}`}
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
-                  </svg>
-                </button>
-                {/* Collapsible content */}
-                {openItems[item] && (
-                  <div className="p-4 bg-gray-50 border-t border-gray-200 text-gray-700">
-                    <h3 className="font-semibold text-blue-700 mb-2 text-lg">Habilidades:</h3>
-                    <ul className="list-disc list-inside mb-4 space-y-1">
-                      {data[item].habilidades.map((h, idx) => (
-                        <li key={idx} className="flex items-center">
-                          <span className="text-green-500 mr-2">✓</span> {h}
-                        </li>
-                      ))}
-                    </ul>
-                    <h3 className="font-semibold text-purple-700 mb-2 text-lg">Carreras afines:</h3>
-                    <ul className="list-disc list-inside space-y-1">
-                      {data[item].carreras.map((c, idx) => (
-                        <li key={idx} className="flex items-center">
-                          <span className="text-orange-500 mr-2">🎓</span> {c}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </div>
-            ))
-          ) : (
-            <p className="text-center text-gray-500 text-lg py-8">
-              No se encontraron resultados para "{searchTerm}".
-            </p>
-          )}
-        </div>
-      </div>
-    );
-  };
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100 font-sans text-gray-900 p-4 sm:p-8">
-      <style>
-        {`
-          @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
-          body {
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intereses Vocacionales e Inteligencias Múltiples</title>
+    <!-- Carga de Tailwind CSS desde CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Importa la fuente Inter */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body {
             font-family: 'Inter', sans-serif;
-          }
-        `}
-      </style>
-      <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-2xl overflow-hidden">
-        {/* Tab navigation */}
-        <div className="flex border-b border-gray-200">
-          <button
-            className={`flex-1 py-4 text-center font-bold text-lg transition-all duration-300 ${
-              activeTab === 'vocational'
-                ? 'bg-gradient-to-r from-blue-600 to-purple-700 text-white shadow-lg'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-            } rounded-tl-xl`}
-            onClick={() => setActiveTab('vocational')}
-          >
-            Intereses Vocacionales 🚀
-          </button>
-          <button
-            className={`flex-1 py-4 text-center font-bold text-lg transition-all duration-300 ${
-              activeTab === 'multiple'
-                ? 'bg-gradient-to-r from-blue-600 to-purple-700 text-white shadow-lg'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-            } rounded-tr-xl`}
-            onClick={() => setActiveTab('multiple')}
-          >
-            Inteligencias Múltiples ✨
-          </button>
-        </div>
+        }
+    </style>
+</head>
+<body>
+    <!-- Título añadido en la parte superior -->
+    <h1 class="text-4xl sm:text-5xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-700 to-purple-900 py-8 px-4 leading-tight">
+        Universidad Virtual CNCI<br/>¡Conoce tus resultados del Test Vocacional!
+    </h1>
 
-        {/* Tab content */}
-        <div className="p-6">
-          {activeTab === 'vocational' && (
-            <TabContent
-              data={vocationalInterests}
-              searchTerm={searchTermVocational}
-              setSearchTerm={setSearchTermVocational}
-              title="Interés Vocacional"
-            />
-          )}
-          {activeTab === 'multiple' && (
-            <TabContent
-              data={multipleIntelligences}
-              searchTerm={searchTermMultiple}
-              setSearchTerm={setSearchTermMultiple}
-              title="Inteligencia Múltiple"
-            />
-          )}
-        </div>
-      </div>
-    </div>
-  );
-};
+    <div id="root"></div>
 
-export default App;
+    <!-- Carga de React y ReactDOM desde CDN -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <!-- Carga de Babel para transformar JSX en el navegador.
+         ¡Importante! Esto es solo para desarrollo y demostraciones simples.
+         Para producción, siempre se debe compilar el código React antes de desplegarlo. -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script type="text/babel">
+        // Componente principal de la aplicación React
+        const App = () => {
+          // Estado para gestionar la pestaña activa: 'vocational' o 'multiple'
+          const [activeTab, setActiveTab] = React.useState('vocational');
+          // Estado para el término de búsqueda en la pestaña de Intereses Vocacionales
+          const [searchTermVocational, setSearchTermVocational] = React.useState('');
+          // Estado para el término de búsqueda en la pestaña de Inteligencias Múltiples
+          const [searchTermMultiple, setSearchTermMultiple] = React.useState('');
+
+          // Datos para los intereses vocacionales
+          const vocationalInterests = {
+            'C - Administrativas y Contables': {
+              emoji: '📊', // Emoji para esta categoría
+              habilidades: [
+                'Organizativo', 'Supervisión', 'Orden', 'Análisis y síntesis', 'Colaboración',
+                'Cálculo', 'Liderazgo', 'Participación Activa'
+              ],
+              carreras: [
+                'Administración de empresas', 'Administración de instituciones de servicio',
+                'Administración de mercados', 'Economía y finanzas internacionales',
+                'Administración de negocios', 'Contabilidad'
+              ]
+            },
+            'H - Humanísticas y Sociales': {
+              emoji: '📚',
+              habilidades: [
+                'Precisión Verbal', 'Organización', 'Relación de Hechos', 'Lingüística',
+                'Orden', 'Justicia', 'Analítico'
+              ],
+              carreras: [
+                'Sociología', 'Psicología', 'Antropología', 'Trabajo Social',
+                'Comunicación Social', 'Periodismo', 'Filosofía', 'Ciencias políticas',
+                'Derecho', 'Ciencias forenses'
+              ]
+            },
+            'A - Artísticas': {
+              emoji: '🎨',
+              habilidades: [
+                'Estético', 'Armónico', 'Manual', 'Visual', 'Auditivo',
+                'Observación y Análisis', 'Senso- Perceptivo'
+              ],
+              carreras: [
+                'Música', 'Artes plásticas', 'Teatro', 'Dibujo'
+              ]
+            },
+            'S - Medicina y Cs. de la Salud': {
+              emoji: '⚕️',
+              habilidades: [
+                'Asistir', 'Investigativo', 'Precisión', 'Senso-Perceptivo',
+                'Analítico', 'Ayudar', 'Curar', 'Rehabilitar'
+              ],
+              carreras: [
+                'Medicina', 'Bacteriología', 'Enfermería', 'Odontología', 'Optometría',
+                'Fisioterapia', 'Fonoaudiología', 'Nutrición', 'Terapia ocupacional',
+                'Terapia respiratoria'
+              ]
+            },
+            'I - Ingeniería y Computación': {
+              emoji: '💻',
+              habilidades: [
+                'Cálculo', 'Científico', 'Manual', 'Exacto', 'Planificar',
+                'Organizar', 'Controlar'
+              ],
+              carreras: [
+                'INGENIERIAS: Financiera', 'Industrial', 'Informática', 'Eléctrica',
+                'Ingeniería de Mercados', 'Química', 'Mecánica', 'Alimentos', 'Civil',
+                'Ambiental', 'Agrícola', 'Materiales', 'Telecomunicaciones', 'Arquitectura',
+                'Diseño gráfico', 'Geología',
+                'TECNOLOGIAS: Técnicos en mecánica', 'Técnicos en contabilidad',
+                'Técnicos en periodismo', 'Técnicos en Recursos Humanos',
+                'Técnico Profesional en Realización y Producción en T.V',
+                'Tecnólogo en Sistemas', 'Tecnólogo en Gestión Financiera',
+                'Tecnólogo en Salud Ocupacional'
+              ]
+            },
+            'D - Defensa y Seguridad': {
+              emoji: '🛡️',
+              habilidades: [
+                'Justicia', 'Equidad', 'Colaboración', 'Espíritu de Equipo',
+                'Liderazgo', 'Coordinación', 'Destreza Física'
+              ],
+              carreras: [
+                'Carrera militar y de policía', 'Oficiales y suboficiales del ejército',
+                'La armada', 'Fuerza aérea', 'Oficiales y suboficiales de la policía nacional'
+              ]
+            },
+            'E - Ciencias Exactas y Agrarias': {
+              emoji: '🔬',
+              habilidades: [
+                'Clasificar', 'Numérico', 'Análisis y Síntesis', 'Organización',
+                'Orden', 'Investigación', 'Precisión', 'Exacto'
+              ],
+              carreras: [
+                'Biología', 'Zoología', 'Zootecnia', 'Agronomía', 'Veterinaria'
+              ]
+            }
+          };
+
+          // Datos para las inteligencias múltiples
+          const multipleIntelligences = {
+            'Inteligencia Verbal': {
+              emoji: '🗣️',
+              habilidades: [
+                'Comprensión del orden y significado de las palabras',
+                'Habilidad en la escritura y la lectura',
+                'Habla y escucha eficaz'
+              ],
+              carreras: [
+                'Periodismo', 'Publicidad', 'Relaciones Públicas', 'Humanidades', 'Ciencia Política'
+              ]
+            },
+            'Inteligencia Lógico-matemática': {
+              emoji: '🧠',
+              habilidades: [
+                'Identificación de modelos y patrones.',
+                'Capacidad para calcular, formular y verificar hipótesis.',
+                'Habilidad para uso del método científico y razonamientos inductivo y deductivo.'
+              ],
+              carreras: [
+                'Informática', 'Carreras de Ciencias exactas', 'Ingeniería', 'Filosofía'
+              ]
+            },
+            'Inteligencia Visual-espacial': {
+              emoji: '👁️',
+              habilidades: [
+                'Presentación de ideas visuales', 'Creación de imágenes mentales',
+                'Percepción de detalles visuales', 'Habilidad para dibujar y confeccionar bocetos'
+              ],
+              carreras: [
+                'Artes plásticas', 'Diseño', 'Fotografía', 'Arquitectura', 'Publicidad'
+              ]
+            },
+            'Inteligencia Kinestésica-corporal': {
+              emoji: '🤸',
+              habilidades: [
+                'Capacidad para actividades de fuerza, rapidez y flexibilidad.',
+                'Buena coordinación óculo-manual', 'Habilidad de equilibrio',
+                'Destreza del cuerpo para expresión corporal o realizar reparaciones'
+              ],
+              carreras: [
+                'Fisioterapia', 'Deportes', 'Danza'
+              ]
+            },
+            'Inteligencia Musical-rítmica': {
+              emoji: '🎶',
+              habilidades: [
+                'Capacidad para cantar, tocar instrumentos y escuchar',
+                'Habilidad para creación y análisis musical'
+              ],
+              carreras: [
+                'Ingeniería de sonido', 'Producción Audiovisual', 'Música', 'Cinematografía', 'Danza'
+              ]
+            },
+            'Inteligencia Intrapersonal': {
+              emoji: '🧘',
+              habilidades: [
+                'Autodisciplina y control personal', 'Destreza para el planteamiento de metas',
+                'Capacidad para evaluar habilidades y desventajas personales',
+                'Habilidad para la introspección y meditación'
+              ],
+              carreras: [
+                'Psicología', 'Pedagogía', 'Trabajo Social'
+              ]
+            },
+            'Inteligencia Interpersonal': {
+              emoji: '🤝',
+              habilidades: [
+                'Empatía y comunicación', 'Habilidad para trabajar con la gente',
+                'Destreza en reconocer sentimientos y personalidades',
+                'Capacidad para ayudar a las personas con sus problemas'
+              ],
+              carreras: [
+                'Ciencias de la comunicación', 'Recursos Humanos', 'Marketing',
+                'Sociología', 'Antropología', 'Derecho', 'Medicina'
+              ]
+            }
+          };
+
+          // Componente para renderizar el contenido de cada pestaña (búsqueda y elementos desplegables)
+          const TabContent = ({ data, searchTerm, setSearchTerm, title }) => {
+            // Estado para gestionar qué elementos están abiertos/cerrados
+            const [openItems, setOpenItems] = React.useState({});
+
+            // Filtra los elementos según el término de búsqueda
+            const filteredData = Object.keys(data).filter(key =>
+              key.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+
+            // Alterna la visibilidad de un elemento
+            const toggleItem = (item) => {
+              setOpenItems(prev => ({ ...prev, [item]: !prev[item] }));
+            };
+
+            return (
+              <div className="p-6 bg-white rounded-lg shadow-lg">
+                {/* Barra de búsqueda */}
+                <div className="mb-6">
+                  <input
+                    type="text"
+                    placeholder={`Buscar ${title.toLowerCase()}...`}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800 placeholder-gray-400"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                </div>
+                {/* Lista de elementos */}
+                <div className="space-y-4">
+                  {filteredData.length > 0 ? (
+                    filteredData.map(item => (
+                      <div key={item} className="border border-gray-200 rounded-lg overflow-hidden">
+                        {/* Encabezado del elemento (botón) */}
+                        <button
+                          className="w-full flex justify-between items-center p-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold text-lg rounded-t-lg shadow-md hover:from-blue-600 hover:to-purple-700 transition-all duration-300 ease-in-out"
+                          onClick={() => toggleItem(item)}
+                        >
+                          <span className="flex items-center">
+                            <span className="mr-2 text-2xl">{data[item].emoji}</span>
+                            {item}
+                          </span>
+                          <svg
+                            className={`w-6 h-6 transform transition-transform duration-300 ${openItems[item] ? 'rotate-180' : ''}`}
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
+                          </svg>
+                        </button>
+                        {/* Contenido colapsable */}
+                        {openItems[item] && (
+                          <div className="p-4 bg-gray-50 border-t border-gray-200 text-gray-700">
+                            <h3 className="font-semibold text-blue-700 mb-2 text-lg">Habilidades:</h3>
+                            <ul className="list-disc list-inside mb-4 space-y-1">
+                              {data[item].habilidades.map((h, idx) => (
+                                <li key={idx} className="flex items-center">
+                                  <span className="text-green-500 mr-2">✓</span> {h}
+                                </li>
+                              ))}
+                            </ul>
+                            <h3 className="font-semibold text-purple-700 mb-2 text-lg">Carreras afines:</h3>
+                            <ul className="list-disc list-inside space-y-1">
+                              {data[item].carreras.map((c, idx) => (
+                                <li key={idx} className="flex items-center">
+                                  <span className="text-orange-500 mr-2">🎓</span> {c}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-center text-gray-500 text-lg py-8">
+                      No se encontraron resultados para "{searchTerm}".
+                    </p>
+                  )}
+                </div>
+              </div>
+            );
+          };
+
+          return (
+            <div className="min-h-screen bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100 font-sans text-gray-900 p-4 sm:p-8">
+              <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-2xl overflow-hidden">
+                {/* Navegación de pestañas */}
+                <div className="flex border-b border-gray-200">
+                  <button
+                    className={`flex-1 py-4 text-center font-bold text-lg transition-all duration-300 ${
+                      activeTab === 'vocational'
+                        ? 'bg-gradient-to-r from-blue-600 to-purple-700 text-white shadow-lg'
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    } rounded-tl-xl`}
+                    onClick={() => setActiveTab('vocational')}
+                  >
+                    Intereses Vocacionales 🚀
+                  </button>
+                  <button
+                    className={`flex-1 py-4 text-center font-bold text-lg transition-all duration-300 ${
+                      activeTab === 'multiple'
+                        ? 'bg-gradient-to-r from-blue-600 to-purple-700 text-white shadow-lg'
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    } rounded-tr-xl`}
+                    onClick={() => setActiveTab('multiple')}
+                  >
+                    Inteligencias Múltiples ✨
+                  </button>
+                </div>
+
+                {/* Contenido de la pestaña */}
+                <div className="p-6">
+                  {activeTab === 'vocational' && (
+                    <TabContent
+                      data={vocationalInterests}
+                      searchTerm={searchTermVocational}
+                      setSearchTerm={setSearchTermVocational}
+                      title="Interés Vocacional"
+                    />
+                  )}
+                  {activeTab === 'multiple' && (
+                    <TabContent
+                      data={multipleIntelligences}
+                      searchTerm={searchTermMultiple}
+                      setSearchTerm={setSearchTermMultiple}
+                      title="Inteligencia Múltiple"
+                    />
+                  )}
+                </div>
+              </div>
+            </div>
+          );
+        };
+
+        // Renderiza el componente App en el div con id 'root'
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>
