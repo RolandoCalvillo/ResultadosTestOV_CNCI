@@ -18,16 +18,13 @@
     <!-- Título con logos añadidos y colores actualizados -->
     <div class="flex items-center justify-center py-8 px-4">
         <!-- Logo CNCI a la izquierda -->
-        <!-- NOTA: Reemplaza esta URL con la URL directa de tu "Logo CNCI.png" si lo subes a un servidor,
-                   o asegúrate de que "Logo CNCI.png" esté en la misma carpeta que este HTML. -->
-        <img src="https://placehold.co/80x80/2a6aff/ffffff?text=CNCI" alt="Logo CNCI" class="h-20 w-auto mr-4 sm:h-24" onerror="this.onerror=null; this.src='https://placehold.co/80x80/cccccc/000000?text=Error';">
+        <!-- Las rutas de las imágenes son relativas, asumiendo que los archivos PNG están en la misma carpeta que index.html -->
+        <img src="Logo CNCI.png" alt="Logo CNCI" class="h-20 w-auto mr-4 sm:h-24" onerror="this.onerror=null; this.src='https://placehold.co/80x80/2a6aff/ffffff?text=CNCI';">
         <h1 class="text-4xl sm:text-5xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-[#2a6aff] to-[#ff8500] leading-tight">
             Universidad Virtual CNCI<br/>¡Conoce tus resultados del Test Vocacional!
         </h1>
         <!-- Logo Mentoría a la derecha -->
-        <!-- NOTA: Reemplaza esta URL con la URL directa de tu "Logo Mentoría.png" si lo subes a un servidor,
-                   o asegúrate de que "Logo Mentoría.png" esté en la misma carpeta que este HTML. -->
-        <img src="https://placehold.co/80x80/ff8500/ffffff?text=Mentoría" alt="Logo Mentoría" class="h-20 w-auto ml-4 sm:h-24" onerror="this.onerror=null; this.src='https://placehold.co/80x80/cccccc/000000?text=Error';">
+        <img src="Logo Mentoría.png" alt="Logo Mentoría" class="h-20 w-auto ml-4 sm:h-24" onerror="this.onerror=null; this.src='https://placehold.co/80x80/ff8500/ffffff?text=Mentoría';">
     </div>
 
     <div id="root"></div>
@@ -324,9 +321,9 @@
             <div className="min-h-screen bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100 font-sans text-gray-900 p-4 sm:p-8">
               <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-2xl overflow-hidden">
                 {/* Navegación de pestañas con los nuevos colores */}
-                <div className="flex border-b border-gray-200">
+                <div class="flex border-b border-gray-200">
                   <button
-                    className={`flex-1 py-4 text-center font-bold text-lg transition-all duration-300 ${
+                    class={`flex-1 py-4 text-center font-bold text-lg transition-all duration-300 ${
                       activeTab === 'vocational'
                         ? 'bg-gradient-to-r from-[#2a6aff] to-[#ff8500] text-white shadow-lg'
                         : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -336,7 +333,7 @@
                     Intereses Vocacionales 🚀
                   </button>
                   <button
-                    className={`flex-1 py-4 text-center font-bold text-lg transition-all duration-300 ${
+                    class={`flex-1 py-4 text-center font-bold text-lg transition-all duration-300 ${
                       activeTab === 'multiple'
                         ? 'bg-gradient-to-r from-[#2a6aff] to-[#ff8500] text-white shadow-lg'
                         : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -348,7 +345,7 @@
                 </div>
 
                 {/* Contenido de la pestaña */}
-                <div className="p-6">
+                <div class="p-6">
                   {activeTab === 'vocational' && (
                     <TabContent
                       data={vocationalInterests}
