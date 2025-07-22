@@ -16,15 +16,18 @@
 </head>
 <body>
     <!-- Título con logos añadidos y colores actualizados -->
-    <div class="flex items-center justify-center py-8 px-4">
-        <!-- Logo CNCI a la izquierda -->
-        <!-- Las rutas de las imágenes son relativas, asumiendo que los archivos PNG están en la misma carpeta que index.html -->
-        <img src="Logo CNCI.png" alt="Logo CNCI" class="h-20 w-auto mr-4 sm:h-24" onerror="this.onerror=null; this.src='https://placehold.co/80x80/2a6aff/ffffff?text=CNCI';">
+    <!-- Se usa flex-col para apilar verticalmente los logos y el título, y se centra todo -->
+    <div class="flex flex-col items-center justify-center py-8 px-4">
+        <!-- Contenedor para los logos para que estén uno al lado del otro encima del título -->
+        <div class="flex items-center justify-center mb-4">
+            <!-- Logo CNCI a la izquierda -->
+            <img src="Logo CNCI.png" alt="Logo CNCI" class="h-16 w-auto mr-4 sm:h-20" onerror="this.onerror=null; this.src='https://placehold.co/80x80/2a6aff/ffffff?text=CNCI';">
+            <!-- Logo Mentoría a la derecha -->
+            <img src="Logo Mentoría.png" alt="Logo Mentoría" class="h-16 w-auto ml-4 sm:h-20" onerror="this.onerror=null; this.src='https://placehold.co/80x80/ff8500/ffffff?text=Mentoría';">
+        </div>
         <h1 class="text-4xl sm:text-5xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-[#2a6aff] to-[#ff8500] leading-tight">
             Universidad Virtual CNCI<br/>¡Conoce tus resultados del Test Vocacional!
         </h1>
-        <!-- Logo Mentoría a la derecha -->
-        <img src="Logo Mentoría.png" alt="Logo Mentoría" class="h-20 w-auto ml-4 sm:h-24" onerror="this.onerror=null; this.src='https://placehold.co/80x80/ff8500/ffffff?text=Mentoría';">
     </div>
 
     <div id="root"></div>
@@ -45,6 +48,9 @@
             Conocer Carreras Profesionales 🎓
         </a>
     </div>
+
+    <!-- Elemento de audio para el sonido de despliegue -->
+    <audio id="toggleSound" src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAkBAgMEBAUFBgYHBwg=" preload="auto"></audio>
 
     <!-- Carga de React y ReactDOM desde CDN -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
@@ -238,14 +244,24 @@
             // Estado para gestionar qué elementos están abiertos/cerrados
             const [openItems, setOpenItems] = React.useState({});
 
+            // Función para reproducir el sonido
+            const playToggleSound = () => {
+              const sound = document.getElementById('toggleSound');
+              if (sound) {
+                sound.currentTime = 0; // Reinicia el sonido si ya está sonando
+                sound.play().catch(e => console.error("Error al reproducir sonido:", e)); // Manejo de errores de reproducción
+              }
+            };
+
             // Filtra los elementos según el término de búsqueda
             const filteredData = Object.keys(data).filter(key =>
               key.toLowerCase().includes(searchTerm.toLowerCase())
             );
 
-            // Alterna la visibilidad de un elemento
+            // Alterna la visibilidad de un elemento y reproduce el sonido
             const toggleItem = (item) => {
               setOpenItems(prev => ({ ...prev, [item]: !prev[item] }));
+              playToggleSound(); // Reproduce el sonido al desplegar
             };
 
             return (
@@ -321,9 +337,9 @@
             <div className="min-h-screen bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100 font-sans text-gray-900 p-4 sm:p-8">
               <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-2xl overflow-hidden">
                 {/* Navegación de pestañas con los nuevos colores */}
-                <div class="flex border-b border-gray-200">
+                <div className="flex border-b border-gray-200">
                   <button
-                    class={`flex-1 py-4 text-center font-bold text-lg transition-all duration-300 ${
+                    className={`flex-1 py-4 text-center font-bold text-lg transition-all duration-300 ${
                       activeTab === 'vocational'
                         ? 'bg-gradient-to-r from-[#2a6aff] to-[#ff8500] text-white shadow-lg'
                         : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -333,7 +349,7 @@
                     Intereses Vocacionales 🚀
                   </button>
                   <button
-                    class={`flex-1 py-4 text-center font-bold text-lg transition-all duration-300 ${
+                    className={`flex-1 py-4 text-center font-bold text-lg transition-all duration-300 ${
                       activeTab === 'multiple'
                         ? 'bg-gradient-to-r from-[#2a6aff] to-[#ff8500] text-white shadow-lg'
                         : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -345,7 +361,7 @@
                 </div>
 
                 {/* Contenido de la pestaña */}
-                <div class="p-6">
+                <div className="p-6">
                   {activeTab === 'vocational' && (
                     <TabContent
                       data={vocationalInterests}
